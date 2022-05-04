@@ -1,6 +1,6 @@
 from django.apps import AppConfig
 
 
-class UsersdConfig(AppConfig):
+class RegularizationConfig(AppConfig):
     default_auto_field = 'django.db.models.BigAutoField'
-    name = 'apps.usersD'
+    name = 'apps.regularization'
