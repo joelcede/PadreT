@@ -1,5 +1,5 @@
 from django.db import models
-
+from django.core.validators import EmailValidator
 IDENTIFICATION_DOCUMENT = [
     ('Cedula', 'Cedula'),
     ('Pasaporte', 'Pasaporte')
@@ -56,7 +56,9 @@ class User(models.Model):
     cross_road_name = models.CharField(max_length=100, verbose_name="Calle transversal", blank=True)
 
     # CONTACT
-    mail = models.EmailField(max_length=100, unique=True, verbose_name="Correo Electronico")
+    mail = models.EmailField(max_length=100, unique=True, verbose_name="Correo Electronico", 
+        validators=[EmailValidator()]
+    )
     password = models.CharField(max_length=30, verbose_name="Contraseña")
     phone = models.CharField(max_length=10, verbose_name="Telefono convensional")
     mobile = models.CharField(max_length=10, blank=True, verbose_name="Celular")

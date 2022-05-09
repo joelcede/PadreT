@@ -11,9 +11,6 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = config('SECRET_KEY')
 
-# SECRET_KEY = 'django-insecure-322ps&_@)9hsr@k&9%qiu6-z1&zt$j04f%521@^59bn&=f93k)'
-
-
 # Application definition
 
 DJANGO_APPS = [
