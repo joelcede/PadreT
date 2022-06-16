@@ -1,7 +1,48 @@
+import profile
 from rest_framework import serializers
-from .models import IdentificationDocument, ClientData
+from .models import (
+    Person, MunicipalAccount, Cadastral,
+    HousesClient, ClientData
+)
 
-class IdentificationDocumentSerializer(serializers.ModelSerializer):
+class CadastralSerializer(serializers.ModelSerializer):
     class Meta:
-        model = IdentificationDocument
-        fields = '__all__'
+        model = Cadastral
+        fields = [
+            'id', 'sector', 'apple', 'lot', 'div1', 'div2', 'div3', 'div4'
+        ]
+
+class HousesClientSerializer(serializers.ModelSerializer):
+    house_cadastral = CadastralSerializer(many=True, read_only=True)
+
+    class Meta:
+        model = HousesClient
+        fields = [
+            'id','country','province','town','parish','district',
+            'main_road_name', 'cross_road_name', 'house_cadastral'
+        ]
+
+class MunicipalAccountSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = MunicipalAccount
+        fields = ['id', 'user', 'password']
+
+class PersonSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Person
+        fields = [
+            'id','dni','type_identification_document','fisrt_name', 'second_name',
+            'father_surname', 'mother_surname', 'mobile', 'is_principal'
+        ]
+
+class ClientDataSerializer(serializers.ModelSerializer):
+    person_identification = PersonSerializer(many=True, read_only=True)
+    municipal_account = MunicipalAccountSerializer(many=True, read_only=True)
+    houses_customer = HousesClientSerializer(many=True, read_only=True)
+
+    class Meta:
+        model = ClientData
+        fields = [
+            'id','mail', 'password', 'telephone', 'person_identification', 
+            'municipal_account', 'houses_customer',
+        ]
