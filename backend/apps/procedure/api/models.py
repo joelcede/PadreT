@@ -2,7 +2,8 @@ from django.db import models
 # Create your models here.
 
 class GeneralProcedure(models.Model):
-    status = models.BooleanField(default=True)
+    successfull_job = models.BooleanField(default=False)
+    active = models.BooleanField(default=True)
 
 class TypeProcedure(models.Model):
     name = models.CharField(max_length=50)

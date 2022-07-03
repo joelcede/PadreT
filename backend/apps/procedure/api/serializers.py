@@ -18,6 +18,6 @@ class GeneralProcedureSerializer(serializers.ModelSerializer):
     class Meta:
         model = GeneralProcedure
         fields = (
-            'id', 'type_procedure' ,'client_data', 'responsible_technical' ,'status'
+            'id', 'type_procedure' ,'client_data', 'responsible_technical' , 'successfull_job' ,'active'
         )
     
