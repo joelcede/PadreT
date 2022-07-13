@@ -6,6 +6,7 @@ class ResponsibleDataSerializer(serializers.ModelSerializer):
         model = ResponsibleData
         fields = [
             'id','dni','type_identification_document','fisrt_name', 
-            'second_name', 'father_surname', 'mother_surname', 'mobile'
+            'second_name', 'father_surname', 'mother_surname', 'mobile',
+            'procedure'
         ]
     

@@ -9,7 +9,7 @@ class CadastralSerializer(serializers.ModelSerializer):
     class Meta:
         model = Cadastral
         fields = [
-            'id', 'sector', 'apple', 'lot', 'div1', 'div2', 'div3', 'div4'
+            'id', 'sector', 'apple', 'lot', 'div1', 'div2', 'div3', 'div4', 'home_client'
         ]
 
 class HousesClientSerializer(serializers.ModelSerializer):
@@ -25,14 +25,14 @@ class HousesClientSerializer(serializers.ModelSerializer):
 class MunicipalAccountSerializer(serializers.ModelSerializer):
     class Meta:
         model = MunicipalAccount
-        fields = ['id', 'user', 'password']
+        fields = ['id', 'user', 'password', 'client_data']
 
 class PersonSerializer(serializers.ModelSerializer):
     class Meta:
         model = Person
         fields = [
             'id','dni','type_identification_document','fisrt_name', 'second_name',
-            'father_surname', 'mother_surname', 'mobile', 'is_principal'
+            'father_surname', 'mother_surname', 'mobile', 'is_principal', 'client_data'
         ]
 
 class ClientDataSerializer(serializers.ModelSerializer):
@@ -44,5 +44,5 @@ class ClientDataSerializer(serializers.ModelSerializer):
         model = ClientData
         fields = [
             'id','mail', 'password', 'telephone', 'person_identification', 
-            'municipal_account', 'houses_customer',
+            'municipal_account', 'houses_customer', 'procedure'
         ]

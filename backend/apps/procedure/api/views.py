@@ -1,16 +1,19 @@
 from django.http.response import JsonResponse
-from apps.clientData.api.serializers import PersonSerializer
+from apps.clientData.api.models import Cadastral, ClientData, MunicipalAccount, Person
+from apps.clientData.api.serializers import (
+    CadastralSerializer, ClientDataSerializer, HousesClientSerializer, 
+    MunicipalAccountSerializer, PersonSerializer
+)
+from apps.technicalSupportData.api.models import ResponsibleData
+from apps.technicalSupportData.api.serializers import ResponsibleDataSerializer
 from rest_framework.decorators import api_view
 
 from .models import GeneralProcedure
 from .serializers import GeneralProcedureSerializer
-from ...clientData.api.models import Person
 
 from rest_framework import generics
 from rest_framework.filters import SearchFilter
-from django_filters.rest_framework import DjangoFilterBackend
-from ...clientData.api.filters import PersonFilter
-#from rest_framework.view.generic import ListAPIView
+from rest_framework.response import Response
 
 @api_view(['GET'])
 def get_data_all(resquest):
@@ -36,19 +39,224 @@ def get_successfull_job(resquest):
         return JsonResponse(data_serializer.data, safe=False)
     return JsonResponse({'error': 'Metodo no soportado'}, status=400)
 
-class PersonView(generics.ListAPIView):
+class SearchClientDataView(generics.ListAPIView):
     queryset = GeneralProcedure.objects.all()
     serializer_class = GeneralProcedureSerializer
-    filter_backends = [DjangoFilterBackend]
-    filterset_fields = {
-        'client_data__person_identification__dni': ['contains'],
-    }
+    filter_backends = [SearchFilter]
+    search_fields = (
+        'client_data__mail',
+        'client_data__telephone',
+        'client_data__person_identification__dni',
+        'client_data__person_identification__fisrt_name',
+        'client_data__person_identification__second_name',
+        'client_data__person_identification__father_surname',
+        'client_data__person_identification__mother_surname',
+        'client_data__person_identification__mobile',
+    )
 
-@api_view(['GET'])
-def get_data_dni(resquest):
-    if resquest.method == 'GET':
-        person = Person.objects.all()
-        person_filter = PersonFilter(resquest.GET, queryset=person)
-        data_serializer = PersonSerializer(person_filter, many=True)
-        return JsonResponse(data_serializer.data, safe=False)
+"""Create a new procedure"""
+@api_view(['POST'])
+def create_procedure(resquest):
+    if resquest.method == 'POST':
+        data = GeneralProcedureSerializer(data=resquest.data)
+        if data.is_valid():
+            data.save()
+            return JsonResponse(data.data, status=201)
+        return JsonResponse(data.errors, status=400)
     return JsonResponse({'error': 'Metodo no soportado'}, status=400)
+
+@api_view(['POST'])
+def create_client_data(request):
+    if request.method == 'POST':
+        data = ClientDataSerializer(data=request.data)
+        if data.is_valid():
+            data.save()
+            return JsonResponse(data.data, status=201)
+        return JsonResponse(data.errors, status=400)
+    return JsonResponse({'error': 'Metodo no soportado'}, status=400)
+
+@api_view(['POST'])
+def create_municipal_account(request):
+    if request.method == 'POST':
+        data = MunicipalAccountSerializer(data=request.data)
+        if data.is_valid():
+            data.save()
+            return JsonResponse(data.data, status=201)
+        return JsonResponse(data.errors, status=400)
+    return JsonResponse({'error': 'Metodo no soportado'}, status=400)
+
+@api_view(['POST'])
+def create_person(request):
+    if request.method == 'POST':
+        data = PersonSerializer(data=request.data)
+        if data.is_valid():
+            data.save()
+            return JsonResponse(data.data, status=201)
+        return JsonResponse(data.errors, status=400)
+    return JsonResponse({'error': 'Metodo no soportado'}, status=400)
+
+@api_view(['POST'])
+def create_houses_client(request):
+    if request.method == 'POST':
+        data = HousesClientSerializer(data=request.data)
+        if data.is_valid():
+            data.save()
+            return JsonResponse(data.data, status=201)
+        return JsonResponse(data.errors, status=400)
+    return JsonResponse({'error': 'Metodo no soportado'}, status=400)
+
+@api_view(['POST'])
+def cadastral(request):
+    if request.method == 'POST':
+        data = CadastralSerializer(data=request.data)
+        if data.is_valid():
+            data.save()
+            return JsonResponse(data.data, status=201)
+        return JsonResponse(data.errors, status=400)
+    return JsonResponse({'error': 'Metodo no soportado'}, status=400)
+
+@api_view(['POST'])
+def responsibles_data(request):
+    if request.method == 'POST':
+        data = ResponsibleDataSerializer(data=request.data)
+        if data.is_valid():
+            data.save()
+            return JsonResponse(data.data, status=201)
+        return JsonResponse(data.errors, status=400)
+
+    return JsonResponse({'error': 'Metodo no soportado'}, status=400)
+
+"""Update and delete procedure"""
+@api_view(['PUT', 'DELETE'])
+def update_procedure(request, pk):
+    try:
+        data = GeneralProcedure.objects.get(pk=pk)
+    except GeneralProcedure.DoesNotExist:
+        return Response(status=404)
+
+    if request.method == 'PUT':
+        data_serializer = GeneralProcedureSerializer(data, data=request.data)
+        if data_serializer.is_valid():
+            data_serializer.save()
+            return JsonResponse(data_serializer.data, status=201)
+        return JsonResponse(data_serializer.errors, status=400)
+
+    elif request.method == 'DELETE':
+        data.delete()
+        return Response(status=204)
+    return JsonResponse({'error': 'Metodo no soportado'}, status=400)
+
+@api_view(['PUT', 'DELETE'])
+def update_client_data(request, pk):
+    try:
+        data = ClientData.objects.get(pk=pk)
+    except ClientData.DoesNotExist:
+        return Response(status=404)
+
+    if request.method == 'PUT':
+        data_serializer = ClientDataSerializer(data, data=request.data)
+        if data_serializer.is_valid():
+            data_serializer.save()
+            return JsonResponse(data_serializer.data, status=201)
+        return JsonResponse(data_serializer.errors, status=400)
+
+    elif request.method == 'DELETE':
+        data.delete()
+        return Response(status=204)
+    return JsonResponse({'error': 'Metodo no soportado'}, status=400)
+
+@api_view(['PUT', 'DELETE'])
+def update_municipal_account(request, pk):
+    try:
+        data = MunicipalAccount.objects.get(pk=pk)
+    except MunicipalAccount.DoesNotExist:
+        return Response(status=404)
+
+    if request.method == 'PUT':
+        data_serializer = MunicipalAccountSerializer(data, data=request.data)
+        if data_serializer.is_valid():
+            data_serializer.save()
+            return JsonResponse(data_serializer.data, status=201)
+        return JsonResponse(data_serializer.errors, status=400)
+
+    elif request.method == 'DELETE':
+        data.delete()
+        return Response(status=204)
+    return JsonResponse({'error': 'Metodo no soportado'}, status=400)
+
+@api_view(['PUT', 'DELETE'])
+def update_person(request, pk):
+    try:
+        data = Person.objects.get(pk=pk)
+    except Person.DoesNotExist:
+        return Response(status=404)
+
+    if request.method == 'PUT':
+        data_serializer = PersonSerializer(data, data=request.data)
+        if data_serializer.is_valid():
+            data_serializer.save()
+            return JsonResponse(data_serializer.data, status=201)
+        return JsonResponse(data_serializer.errors, status=400)
+
+    elif request.method == 'DELETE':
+        data.delete()
+        return Response(status=204)
+    return JsonResponse({'error': 'Metodo no soportado'}, status=400)
+
+@api_view(['PUT', 'DELETE'])
+def update_houses_client(request, pk):
+    try:
+        data = HousesClient.objects.get(pk=pk)
+    except HousesClient.DoesNotExist:
+        return Response(status=404)
+
+    if request.method == 'PUT':
+        data_serializer = HousesClientSerializer(data, data=request.data)
+        if data_serializer.is_valid():
+            data_serializer.save()
+            return JsonResponse(data_serializer.data, status=201)
+        return JsonResponse(data_serializer.errors, status=400)
+
+    elif request.method == 'DELETE':
+        data.delete()
+        return Response(status=204)
+    return JsonResponse({'error': 'Metodo no soportado'}, status=400)
+
+@api_view(['PUT', 'DELETE'])
+def update_cadastral(request, pk):
+    try:
+        data = Cadastral.objects.get(pk=pk)
+    except Cadastral.DoesNotExist:
+        return Response(status=404)
+
+    if request.method == 'PUT':
+        data_serializer = CadastralSerializer(data, data=request.data)
+        if data_serializer.is_valid():
+            data_serializer.save()
+            return JsonResponse(data_serializer.data, status=201)
+        return JsonResponse(data_serializer.errors, status=400)
+
+    elif request.method == 'DELETE':
+        data.delete()
+        return Response(status=204)
+    return JsonResponse({'error': 'Metodo no soportado'}, status=400)
+
+@api_view(['PUT', 'DELETE'])
+def update_responsibles_data(request, pk):
+    try:
+        data = ResponsibleData.objects.get(pk=pk)
+    except ResponsibleData.DoesNotExist:
+        return Response(status=404)
+
+    if request.method == 'PUT':
+        data_serializer = ResponsibleDataSerializer(data, data=request.data)
+        if data_serializer.is_valid():
+            data_serializer.save()
+            return JsonResponse(data_serializer.data, status=201)
+        return JsonResponse(data_serializer.errors, status=400)
+
+    elif request.method == 'DELETE':
+        data.delete()
+        return Response(status=204)
+    return JsonResponse({'error': 'Metodo no soportado'}, status=400)
+
