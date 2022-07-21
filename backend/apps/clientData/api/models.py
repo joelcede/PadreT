@@ -22,6 +22,7 @@ class ClientData(models.Model):
 
 class HousesClient(models.Model):
     # LOCATION
+    image = models.URLField(max_length=200, blank=True)
     country = models.CharField(max_length=50, blank=True, default="Ecuador")
     province = models.CharField(max_length=50, default="Guayas")
     town = models.CharField(max_length=50, blank=True, default="Guayaquil")
@@ -29,6 +30,7 @@ class HousesClient(models.Model):
     district = models.CharField(max_length=100, blank=True)
     main_road_name = models.CharField(max_length=100)
     cross_road_name = models.CharField(max_length=100, blank=True)
+    coordinates = models.URLField(max_length=200, blank=True)
 
     client_data = models.ForeignKey(ClientData, related_name="houses_customer", on_delete=models.CASCADE)
 

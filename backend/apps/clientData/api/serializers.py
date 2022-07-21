@@ -18,8 +18,8 @@ class HousesClientSerializer(serializers.ModelSerializer):
     class Meta:
         model = HousesClient
         fields = [
-            'id','country','province','town','parish','district',
-            'main_road_name', 'cross_road_name', 'house_cadastral'
+            'id', 'image' , 'country','province','town','parish','district',
+            'main_road_name', 'cross_road_name', 'coordinates', 'house_cadastral'
         ]
 
 class MunicipalAccountSerializer(serializers.ModelSerializer):
