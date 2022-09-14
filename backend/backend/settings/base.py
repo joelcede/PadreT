@@ -38,7 +38,8 @@ LOCAL_APPS = [
 INSTALLED_APPS = DJANGO_APPS + THIRD_PARTY_APPS + LOCAL_APPS
 
 CORS_ALLOWED_ORIGINS = [
-    config('CORS_ALLOWED_URL'),
+    'http://localhost:8080',
+    'http://localhost:4200'
 ]
 
 REST_FRAMEWORK = {
