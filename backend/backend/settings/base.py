@@ -31,7 +31,6 @@ THIRD_PARTY_APPS = [
 
 LOCAL_APPS = [
     'apps.clientData',
-    'apps.technicalSupportData',
     'apps.procedure',
 ]
 

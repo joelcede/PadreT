@@ -1,11 +1,11 @@
 from django.http.response import JsonResponse
-from apps.clientData.api.models import Cadastral, ClientData, MunicipalAccount, Person
+from apps.clientData.api.models import CadastralData, OwnerData, MunicipalAccountData, PersonData, HouseClientData
 from apps.clientData.api.serializers import (
-    CadastralSerializer, ClientDataSerializer, HousesClientSerializer, 
+    CadastralSerializer, OwnerSerializer, HousesClientSerializer, 
     MunicipalAccountSerializer, PersonSerializer
 )
-from apps.technicalSupportData.api.models import ResponsibleData
-from apps.technicalSupportData.api.serializers import ResponsibleDataSerializer
+# from apps.technicalSupportData.api.models import ResponsibleData
+# from apps.technicalSupportData.api.serializers import ResponsibleDataSerializer
 from rest_framework.decorators import api_view
 
 from .models import GeneralProcedure
@@ -68,7 +68,7 @@ def create_procedure(resquest):
 @api_view(['POST'])
 def create_client_data(request):
     if request.method == 'POST':
-        data = ClientDataSerializer(data=request.data)
+        data = OwnerSerializer(data=request.data)
         if data.is_valid():
             data.save()
             return JsonResponse(data.data, status=201)
@@ -115,16 +115,16 @@ def cadastral(request):
         return JsonResponse(data.errors, status=400)
     return JsonResponse({'error': 'Metodo no soportado'}, status=400)
 
-@api_view(['POST'])
-def responsibles_data(request):
-    if request.method == 'POST':
-        data = ResponsibleDataSerializer(data=request.data)
-        if data.is_valid():
-            data.save()
-            return JsonResponse(data.data, status=201)
-        return JsonResponse(data.errors, status=400)
+# @api_view(['POST'])
+# def responsibles_data(request):
+#     if request.method == 'POST':
+#         data = ResponsibleDataSerializer(data=request.data)
+#         if data.is_valid():
+#             data.save()
+#             return JsonResponse(data.data, status=201)
+#         return JsonResponse(data.errors, status=400)
 
-    return JsonResponse({'error': 'Metodo no soportado'}, status=400)
+#     return JsonResponse({'error': 'Metodo no soportado'}, status=400)
 
 """Update and delete procedure"""
 @api_view(['PUT', 'DELETE'])
@@ -149,12 +149,12 @@ def update_procedure(request, pk):
 @api_view(['PUT', 'DELETE'])
 def update_client_data(request, pk):
     try:
-        data = ClientData.objects.get(pk=pk)
-    except ClientData.DoesNotExist:
+        data = OwnerData.objects.get(pk=pk)
+    except OwnerData.DoesNotExist:
         return Response(status=404)
 
     if request.method == 'PUT':
-        data_serializer = ClientDataSerializer(data, data=request.data)
+        data_serializer = OwnerSerializer(data, data=request.data)
         if data_serializer.is_valid():
             data_serializer.save()
             return JsonResponse(data_serializer.data, status=201)
@@ -168,8 +168,8 @@ def update_client_data(request, pk):
 @api_view(['PUT', 'DELETE'])
 def update_municipal_account(request, pk):
     try:
-        data = MunicipalAccount.objects.get(pk=pk)
-    except MunicipalAccount.DoesNotExist:
+        data = MunicipalAccountData.objects.get(pk=pk)
+    except MunicipalAccountData.DoesNotExist:
         return Response(status=404)
 
     if request.method == 'PUT':
@@ -187,8 +187,8 @@ def update_municipal_account(request, pk):
 @api_view(['PUT', 'DELETE'])
 def update_person(request, pk):
     try:
-        data = Person.objects.get(pk=pk)
-    except Person.DoesNotExist:
+        data = PersonData.objects.get(pk=pk)
+    except PersonData.DoesNotExist:
         return Response(status=404)
 
     if request.method == 'PUT':
@@ -206,8 +206,8 @@ def update_person(request, pk):
 @api_view(['PUT', 'DELETE'])
 def update_houses_client(request, pk):
     try:
-        data = HousesClient.objects.get(pk=pk)
-    except HousesClient.DoesNotExist:
+        data = HouseClientData.objects.get(pk=pk)
+    except HouseClientData.DoesNotExist:
         return Response(status=404)
 
     if request.method == 'PUT':
@@ -225,8 +225,8 @@ def update_houses_client(request, pk):
 @api_view(['PUT', 'DELETE'])
 def update_cadastral(request, pk):
     try:
-        data = Cadastral.objects.get(pk=pk)
-    except Cadastral.DoesNotExist:
+        data = CadastralData.objects.get(pk=pk)
+    except CadastralData.DoesNotExist:
         return Response(status=404)
 
     if request.method == 'PUT':
@@ -241,22 +241,22 @@ def update_cadastral(request, pk):
         return Response(status=204)
     return JsonResponse({'error': 'Metodo no soportado'}, status=400)
 
-@api_view(['PUT', 'DELETE'])
-def update_responsibles_data(request, pk):
-    try:
-        data = ResponsibleData.objects.get(pk=pk)
-    except ResponsibleData.DoesNotExist:
-        return Response(status=404)
+# @api_view(['PUT', 'DELETE'])
+# def update_responsibles_data(request, pk):
+#     try:
+#         data = ResponsibleData.objects.get(pk=pk)
+#     except ResponsibleData.DoesNotExist:
+#         return Response(status=404)
 
-    if request.method == 'PUT':
-        data_serializer = ResponsibleDataSerializer(data, data=request.data)
-        if data_serializer.is_valid():
-            data_serializer.save()
-            return JsonResponse(data_serializer.data, status=201)
-        return JsonResponse(data_serializer.errors, status=400)
+#     if request.method == 'PUT':
+#         data_serializer = ResponsibleDataSerializer(data, data=request.data)
+#         if data_serializer.is_valid():
+#             data_serializer.save()
+#             return JsonResponse(data_serializer.data, status=201)
+#         return JsonResponse(data_serializer.errors, status=400)
 
-    elif request.method == 'DELETE':
-        data.delete()
-        return Response(status=204)
-    return JsonResponse({'error': 'Metodo no soportado'}, status=400)
+#     elif request.method == 'DELETE':
+#         data.delete()
+#         return Response(status=204)
+#     return JsonResponse({'error': 'Metodo no soportado'}, status=400)
 
