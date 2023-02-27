@@ -1,14 +1,14 @@
 from django.contrib import admin
 
 from .api.models import (
-    MunicipalAccountData, PersonData, CadastralData,
-    HouseClientData, OwnerData, ResponsibleData
+    CadastralModel, PersonModel, OwnerModel, ResponsibleModel,
+    MunicipalAccountModel, HouseClientModel
 )
 # Register your models here.
 
-admin.site.register(PersonData)
-admin.site.register(MunicipalAccountData)
-admin.site.register(CadastralData)
-admin.site.register(HouseClientData)
-admin.site.register(OwnerData)
-admin.site.register(ResponsibleData)
+admin.site.register(CadastralModel)
+admin.site.register(PersonModel)
+admin.site.register(OwnerModel)
+admin.site.register(ResponsibleModel)
+admin.site.register(MunicipalAccountModel)
+admin.site.register(HouseClientModel)

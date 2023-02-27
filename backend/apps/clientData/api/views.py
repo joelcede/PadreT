@@ -2,89 +2,123 @@ from django.http import JsonResponse
 from rest_framework import status
 from rest_framework.decorators import api_view
 
-from ...clientData.api.models import CadastralData, HouseClientData, MunicipalAccountData, OwnerData, PersonData, ResponsibleData
-from ...clientData.api.serializers import CadastralSerializer, HousesClientSerializer, MunicipalAccountSerializer, OwnerSerializer, PersonSerializer
+from ...clientData.api.models import (
+    CadastralModel, PersonModel, OwnerModel, ResponsibleModel,
+    MunicipalAccountModel, HouseClientModel
+)
+from ...clientData.api.serializers import (
+    CadastralSerializer, HousesClientSerializer, ResponsibleSerializer,
+    MunicipalAccountSerializer, OwnerSerializer, PersonSerializer
+)
 
-"""PERSONS"""
+"""GETS ALLS"""
 @api_view(['GET'])
-def get_PersonData(resquest):
+def getCadastralAll(resquest):
     if resquest.method == 'GET':
-        data = PersonData.objects.all()
+        data = CadastralModel.objects.all()
+        data_serializer = CadastralSerializer(data, many=True)
+        return JsonResponse(data_serializer.data, safe=False)
+    return JsonResponse({'error': 'Metodo no soportado'}, status=400)
+
+@api_view(['GET'])
+def getPersonAll(resquest):
+    if resquest.method == 'GET':
+        data = PersonModel.objects.all()
         data_serializer = PersonSerializer(data,many=True)
         return JsonResponse(data_serializer.data, safe=False)
     return JsonResponse({'error': 'Metodo no soportado'}, status=400)
 
 @api_view(['GET'])
-def get_OwnerData(resquest):
+def getOwnerAll(resquest):
     if resquest.method == 'GET':
-        data = OwnerData.objects.all()
-        data_serializer = OwnerSerializer(data,many=True)
-        return JsonResponse(data_serializer.data, safe=False)
-    return JsonResponse({'error': 'Metodo no soportado'}, status=400)
-
-
-@api_view(['POST'])
-def post_PersonData(resquest):
-    if resquest.method == 'POST':
-        data = PersonSerializer(data=resquest.data)
-        if data.is_valid() and data.save():
-            return JsonResponse(data.data, status=201)
-        return JsonResponse(data.errors, status=400)
-    return JsonResponse({'error': 'Metodo no soportado'}, status=405)
-
-
-@api_view(['POST'])
-def create_ownerData(resquest):
-    if resquest.method == 'POST':
-        dataOwner = OwnerSerializer(data=resquest.data)
-        if dataOwner.is_valid() and dataOwner.save():
-            return JsonResponse(dataOwner.data, status=status.HTTP_201_CREATE)
-        return JsonResponse(dataOwner.errors, status=status.HTTP_400_BAD_REQUEST)
-    return JsonResponse({'error': 'Metodo no soportado'}, status=status.HTTP_405_METHOD_NOT_ALLOWEDs)
-
-"""OWNERS"""
-@api_view(['GET'])
-def get_OwnerData(resquest):
-    if resquest.method == 'GET':
-        data = OwnerData.objects.all()
+        data = OwnerModel.objects.all()
         data_serializer = OwnerSerializer(data,many=True)
         return JsonResponse(data_serializer.data, safe=False)
     return JsonResponse({'error': 'Metodo no soportado'}, status=400)
 
 @api_view(['GET'])
-def get_OwnerDataIsPrincipal(resquest):
+def getResponsibleAll(resquest):
     if resquest.method == 'GET':
-        data = OwnerData.objects.filter(is_principal=True)
-        data_serializer = OwnerSerializer(data,many=True)
+        data = ResponsibleModel.objects.all()
+        data_serializer = ResponsibleSerializer(data,many=True)
         return JsonResponse(data_serializer.data, safe=False)
     return JsonResponse({'error': 'Metodo no soportado'}, status=400)
 
 @api_view(['GET'])
-def get_HousesData(resquest):
+def getMunicipalAccountAll(resquest):
     if resquest.method == 'GET':
-        data = HouseClientData.objects.all()
+        data = MunicipalAccountModel.objects.all()
+        data_serializer = MunicipalAccountSerializer(data,many=True)
+        return JsonResponse(data_serializer.data, safe=False)
+    return JsonResponse({'error': 'Metodo no soportado'}, status=400)
+
+@api_view(['GET'])
+def getHousesClientsAll(resquest):
+    if resquest.method == 'GET':
+        data = HouseClientModel.objects.all()
         data_serializer = HousesClientSerializer(data,many=True)
         return JsonResponse(data_serializer.data, safe=False)
     return JsonResponse({'error': 'Metodo no soportado'}, status=400)
 
 @api_view(['GET'])
-def get_CadastralData(resquest):
+def get_person_x_owner(resquest, id):
     if resquest.method == 'GET':
-        data = CadastralData.objects.all()
-        data_serializer = CadastralSerializer(data,many=True)
-        return JsonResponse(data_serializer.data, safe=False)
+        person = PersonModel.objects.get(id=id)
+        person_serealizer = PersonSerializer(person)
+        return JsonResponse(person_serealizer.data, safe=False)
     return JsonResponse({'error': 'Metodo no soportado'}, status=400)
 
-def get_MunicipalAccountData(resquest):
-    if resquest.method == 'GET':
-        data = MunicipalAccountData.objects.all()
-        data_serializer = MunicipalAccountSerializer(data,many=True)
-        return JsonResponse(data_serializer.data, safe=False)
-    return JsonResponse({'error': 'Metodo no soportado'}, status=400)
+"""POSTS"""
+@api_view(['POST'])
+def postCadastral(resquest):
+    if resquest.method == 'POST':
+        data = CadastralSerializer(data=resquest.data)
+        if data.is_valid() and data.save():
+            return JsonResponse(data.data, status=status.HTTP_201_CREATED)
+        return JsonResponse(data.errors, status.HTTP_400_BAD_REQUEST)
+    return JsonResponse({'error': 'metodo no soportado'}, status.HTTP_500_INTERNAL_SERVER_ERROR)
 
-def get_ResponsibleData(resquest):
-    if resquest.method == 'GET':
-        data = ResponsibleData.objects.all()
-        data_serializer = MunicipalAccountSerializer(data,many=True)
-        return JsonResponse(data_serializer.data, safe=False)
-    return JsonResponse({'error': 'Metodo no soportado'}, status=400)
+@api_view(['POST'])
+def postPerson(resquest):
+    if resquest.method == 'POST':
+        data = PersonSerializer(data=resquest.data)
+        if data.is_valid() and data.save():
+            return JsonResponse(data.data, status=status.HTTP_201_CREATED)
+        return JsonResponse(data.errors, status.HTTP_400_BAD_REQUEST)
+    return JsonResponse({'error': 'metodo no soportado'}, status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+@api_view(['POST'])
+def postOwner(resquest):
+    if resquest.method == 'POST':
+        data = OwnerSerializer(data=resquest.data)
+        if data.is_valid() and data.save():
+            return JsonResponse(data.data, status=status.HTTP_201_CREATED)
+        return JsonResponse(data.errors, status.HTTP_400_BAD_REQUEST)
+    return JsonResponse({'error': 'metodo no soportado'}, status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+@api_view(['POST'])
+def postResponsible(resquest):
+    if resquest.method == 'POST':
+        data = ResponsibleSerializer(data=resquest.data)
+        if data.is_valid() and data.save():
+            return JsonResponse(data.data, status=status.HTTP_201_CREATED)
+        return JsonResponse(data.errors, status.HTTP_400_BAD_REQUEST)
+    return JsonResponse({'error': 'metodo no soportado'}, status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+@api_view(['POST'])
+def postMunicipalAccount(resquest):
+    if resquest.method == 'POST':
+        data = MunicipalAccountSerializer(data=resquest.data)
+        if data.is_valid() and data.save():
+            return JsonResponse(data.data, status=status.HTTP_201_CREATED)
+        return JsonResponse(data.errors, status.HTTP_400_BAD_REQUEST)
+    return JsonResponse({'error': 'metodo no soportado'}, status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+@api_view(['POST'])
+def postHouseClient(resquest):
+    if resquest.method == 'POST':
+        data = HousesClientSerializer(data=resquest.data)
+        if data.is_valid() and data.save():
+            return JsonResponse(data.data, status=status.HTTP_201_CREATED)
+        return JsonResponse(data.errors, status.HTTP_400_BAD_REQUEST)
+    return JsonResponse({'error': 'metodo no soportado'}, status.HTTP_500_INTERNAL_SERVER_ERROR)

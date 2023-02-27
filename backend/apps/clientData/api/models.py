@@ -1,7 +1,7 @@
 from django.db import models
 # Create your models here.
 
-class CadastralData(models.Model):
+class CadastralModel(models.Model):
     sector = models.CharField(max_length=3)
     apple = models.CharField(max_length=4)
     lot = models.CharField(max_length=3)
@@ -21,7 +21,7 @@ class CadastralData(models.Model):
     def __str__(self) -> str:
         return f"{self.sector}-{self.apple}-{self.lot}-{self.div1}-{self.div2}-{self.div3}-{self.div4}"  
 
-class PersonData(models.Model):
+class PersonModel(models.Model):
     #Identification
     dni = models.CharField(max_length=13, unique=True)
     type_identification_document = models.CharField(max_length=10, default="cedula")
@@ -46,42 +46,7 @@ class PersonData(models.Model):
     def __str__(self) -> str:
         return self.dni
 
-class OwnerData(models.Model):
-    #ForeignKey
-    id_person_data = models.OneToOneField(PersonData, related_name="person_data", on_delete=models.CASCADE, db_column="id_person_data")
-
-    #Body
-    is_principal = models.BooleanField(default=False, blank=True)
-    
-    #Other
-    created_at = models.DateTimeField(auto_now_add=True, blank=True)
-    modified = models.DateTimeField(auto_now=True, blank=True)
-
-    class Meta:
-        verbose_name = "Datos del Propietario"
-        verbose_name_plural = "Datos de los propietarios"
-
-    def __str__(self) -> str:
-        return f"{self.id_person_data.fisrt_name} {self.id_person_data.father_surname}"
-
-class ResponsibleData(models.Model):
-    #OneToOneField
-    id_person_data = models.OneToOneField(PersonData, related_name="responsible_data", on_delete=models.CASCADE, db_column="id_person_data")
-
-    #Body
-    email = models.EmailField(max_length=50, blank=True)
-    #Other
-    created_at = models.DateTimeField(auto_now_add=True, blank=True)
-    modified = models.DateTimeField(auto_now=True, blank=True)
-
-    class Meta:
-        verbose_name = "Datos del responsable tecnico"
-        verbose_name_plural = "Datos de los responsables tecnicos"
-
-    def __str__(self) -> str:
-        return f"{self.id_person_data.fisrt_name} {self.id_person_data.father_surname}"
-
-class MunicipalAccountData(models.Model):
+class MunicipalAccountModel(models.Model):
     #Credentials
     user = models.CharField(max_length=10)
     password = models.CharField(max_length=50)
@@ -97,12 +62,29 @@ class MunicipalAccountData(models.Model):
     def __str__(self) -> str:
         return self.user
 
-class HouseClientData(models.Model):
+class ResponsibleModel(models.Model):
+    #OneToOneField
+    id_person_data = models.OneToOneField(PersonModel, related_name="responsible_data", on_delete=models.CASCADE, db_column="id_person_data")
+    
+    
+    #Body
+    email = models.EmailField(max_length=50, blank=True)
+    #Other
+    created_at = models.DateTimeField(auto_now_add=True, blank=True)
+    modified = models.DateTimeField(auto_now=True, blank=True)
+
+    class Meta:
+        verbose_name = "Datos del responsable tecnico"
+        verbose_name_plural = "Datos de los responsables tecnicos"
+
+    def __str__(self) -> str:
+        return f"{self.id_person_data.fisrt_name} {self.id_person_data.father_surname}"
+
+class HouseClientModel(models.Model):
     #Key's
-    id_owner_data = models.ForeignKey(OwnerData, related_name="owner_data", on_delete=models.CASCADE, db_column="id_owner_data")
-    id_responsible_data = models.OneToOneField(ResponsibleData, related_name="responsible_data", on_delete=models.CASCADE, db_column="id_responsible_data")
-    id_municipal_account_data = models.OneToOneField(MunicipalAccountData, related_name="municipal_account_data", on_delete=models.CASCADE, db_column="id_municipal_account_data")
-    id_cadastral_data = models.OneToOneField(CadastralData, related_name="cadastral_data", on_delete=models.CASCADE, db_column="id_cadastral_data")
+    id_municipal_account_data = models.OneToOneField(MunicipalAccountModel, related_name="municipal_account_data", on_delete=models.CASCADE, db_column="id_municipal_account_data")
+    id_cadastral_data = models.OneToOneField(CadastralModel, related_name="cadastral_data", on_delete=models.CASCADE, db_column="id_cadastral_data")
+    id_responsible_data = models.ForeignKey(ResponsibleModel, related_name="responsible_data", on_delete=models.CASCADE, db_column="id_responsible_data")
 
     # LOCATION
     image = models.URLField(max_length=200, blank=True)
@@ -122,7 +104,26 @@ class HouseClientData(models.Model):
 
     class Meta:
         verbose_name = "Casa del cliente"
-        verbose_name_plural = "Casas del cliente"
+        verbose_name_plural = "Casas de los clientes"
     
     def __str__(self) -> str:
         return self.main_road_name
+
+
+class OwnerModel(models.Model):
+    #Ids
+    id_person_data = models.OneToOneField(PersonModel, related_name="person_data", on_delete=models.CASCADE, db_column="id_person_data")
+    id_house_data = models.ForeignKey(HouseClientModel, related_name="house_x_owner_data", on_delete=models.CASCADE, db_column="id_house_data")
+    #Body
+    is_principal = models.BooleanField(default=False, blank=True)
+    
+    #Other
+    created_at = models.DateTimeField(auto_now_add=True, blank=True)
+    modified = models.DateTimeField(auto_now=True, blank=True)
+
+    class Meta:
+        verbose_name = "Datos del Propietario"
+        verbose_name_plural = "Datos de los propietarios"
+
+    def __str__(self) -> str:
+        return f"{self.id_person_data.fisrt_name} {self.id_person_data.father_surname}"

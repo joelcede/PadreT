@@ -1,5 +1,8 @@
 from django.http.response import JsonResponse
-from apps.clientData.api.models import CadastralData, OwnerData, MunicipalAccountData, PersonData, HouseClientData
+from apps.clientData.api.models import (
+    CadastralModel, PersonModel, OwnerModel, ResponsibleModel,
+    MunicipalAccountModel, HouseClientModel
+)
 from apps.clientData.api.serializers import (
     CadastralSerializer, OwnerSerializer, HousesClientSerializer, 
     MunicipalAccountSerializer, PersonSerializer
@@ -149,8 +152,8 @@ def update_procedure(request, pk):
 @api_view(['PUT', 'DELETE'])
 def update_client_data(request, pk):
     try:
-        data = OwnerData.objects.get(pk=pk)
-    except OwnerData.DoesNotExist:
+        data = OwnerModel.objects.get(pk=pk)
+    except OwnerModel.DoesNotExist:
         return Response(status=404)
 
     if request.method == 'PUT':
@@ -168,8 +171,8 @@ def update_client_data(request, pk):
 @api_view(['PUT', 'DELETE'])
 def update_municipal_account(request, pk):
     try:
-        data = MunicipalAccountData.objects.get(pk=pk)
-    except MunicipalAccountData.DoesNotExist:
+        data = MunicipalAccountModel.objects.get(pk=pk)
+    except MunicipalAccountModel.DoesNotExist:
         return Response(status=404)
 
     if request.method == 'PUT':
@@ -187,8 +190,8 @@ def update_municipal_account(request, pk):
 @api_view(['PUT', 'DELETE'])
 def update_person(request, pk):
     try:
-        data = PersonData.objects.get(pk=pk)
-    except PersonData.DoesNotExist:
+        data = PersonModel.objects.get(pk=pk)
+    except PersonModel.DoesNotExist:
         return Response(status=404)
 
     if request.method == 'PUT':
@@ -206,8 +209,8 @@ def update_person(request, pk):
 @api_view(['PUT', 'DELETE'])
 def update_houses_client(request, pk):
     try:
-        data = HouseClientData.objects.get(pk=pk)
-    except HouseClientData.DoesNotExist:
+        data = HouseClientModel.objects.get(pk=pk)
+    except HouseClientModel.DoesNotExist:
         return Response(status=404)
 
     if request.method == 'PUT':
@@ -225,8 +228,8 @@ def update_houses_client(request, pk):
 @api_view(['PUT', 'DELETE'])
 def update_cadastral(request, pk):
     try:
-        data = CadastralData.objects.get(pk=pk)
-    except CadastralData.DoesNotExist:
+        data = CadastralModel.objects.get(pk=pk)
+    except CadastralModel.DoesNotExist:
         return Response(status=404)
 
     if request.method == 'PUT':

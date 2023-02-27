@@ -1,6 +1,6 @@
 from django.db import models
 
-from ...clientData.api.models import HouseClientData
+from ...clientData.api.models import HouseClientModel
 # Create your models here.
 
 class GeneralProcedure(models.Model):
@@ -13,7 +13,7 @@ class GeneralProcedure(models.Model):
     ]
 
     #ForeignKey
-    id_house = models.ForeignKey(HouseClientData, related_name="house_clients", on_delete=models.CASCADE, db_column="id_house")
+    id_house = models.ForeignKey(HouseClientModel, related_name="house_clients", on_delete=models.CASCADE, db_column="id_general_procedure")
 
     #Body
     successfull_job = models.BooleanField(default=False)

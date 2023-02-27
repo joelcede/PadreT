@@ -1,65 +1,66 @@
 from rest_framework import serializers
 from .models import (
-    PersonData, MunicipalAccountData, CadastralData,
-    HouseClientData, OwnerData, ResponsibleData
+    CadastralModel, PersonModel, OwnerModel, ResponsibleModel,
+    MunicipalAccountModel, HouseClientModel
 )
 
 class CadastralSerializer(serializers.ModelSerializer):
     class Meta:
-        model = CadastralData
-        fields = [
-            'id', 'sector', 'apple', 'lot', 'div1', 'div2', 'div3', 'div4', 'cadastral'
-        ]
+        model = CadastralModel
+        fields = '__all__'
 
+
+        
 class MunicipalAccountSerializer(serializers.ModelSerializer):
     class Meta:
-        model = MunicipalAccountData
-        fields = ['id', 'user', 'password', 'owner_data']
+        model = MunicipalAccountModel
+        fields = ['id', 'user', 'password']
 
+class ResponsibleSerializer(serializers.ModelSerializer):
+    #responsible_data = PersonSerializer(many=True, read_only=True)
+    #house_x_responsible_data = HousesClientSerializer(many=True, read_only=True)
 
-class PersonSerializer(serializers.ModelSerializer):
-    #id_person_data = OwnerSerializer(many=True, read_only=True)
-    #houses_owner = HousesClientSerializer(many=True, read_only=True)
     class Meta:
-        model = PersonData
-        fields = [
-            'id','dni','type_identification_document','fisrt_name', 'second_name',
-            'father_surname', 'mother_surname', 'mobile'#, 'id_person_data'
-        ]
+        model = ResponsibleModel
+        fields = '__all__'
+
+    # def create(self, validated_data):
+    #     persona_data = validated_data.pop('responsible_data')
+    #     persona = PersonModel.objects.create(**persona_data)
+    #     responsible = ResponsibleModel.objects.create(persona=persona, **validated_data)
+    #     return responsible
+
+
 
 class OwnerSerializer(serializers.ModelSerializer):
-    person_data = PersonSerializer(many=True, read_only=True)
+    #person_data = PersonSerializer(many=True, read_only=True)
+    # house_data = HousesClientSerializer(many=True, read_only=True)
 
     class Meta:
-        model = OwnerData
-        fields = [
-            'id', 'id_person_data', 'is_principal',
-        ]
+        model = OwnerModel
+        fields = '__all__'
 
+    # def create(self, validated_data):
+    #     persona_data = validated_data.pop('person_data')
+    #     persona = PersonModel.objects.create(**persona_data)
+    #     owner = OwnerModel.objects.create(persona=persona, **validated_data)
+    #     return owner
+
+class PersonSerializer(serializers.ModelSerializer):
+    #person_data = OwnerSerializer()
+
+    class Meta:
+        model = PersonModel
+        fields = '__all__'
 
 
 class HousesClientSerializer(serializers.ModelSerializer):
-    house_cadastral = CadastralSerializer(many=True, read_only=True)
-    id_person_x_house_data = PersonSerializer(many=True, read_only=True)
-    #ids = PersonSerializer(many=True, read_only=True)
+    house_x_owner_data = OwnerSerializer(many=True, read_only=True)
+    person_data = PersonSerializer(many=True, read_only=True)
+    responsible_data = ResponsibleSerializer(many=True, read_only=True)
+    municipal_account_data = MunicipalAccountSerializer(many=True, read_only=True)
+    cadastral_data = CadastralSerializer(many=True, read_only=True)
 
     class Meta:
-        model = HouseClientData
-        fields = [
-            'id', 'image' , 'country','province','town','parish','district',
-            'main_road_name', 'cross_road_name', 'coordinates', 'house_cadastral', 'id_person_x_house_data'
-        ]
-
-
-
-class ResponsibleSerializer(serializers.ModelSerializer):
-    house_cadastral = CadastralSerializer(many=True, read_only=True)
-    #owner = OwnerDataSerializer(many=True, read_only=True)
-
-    class Meta:
-        model = HouseClientData
-        fields = [
-            'id', 'image' , 'country','province','town','parish','district',
-            'main_road_name', 'cross_road_name', 'coordinates','owner', 'house_cadastral'
-        ]
-
+        model = HouseClientModel
+        fields = '__all__'
